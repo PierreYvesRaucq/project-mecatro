@@ -44,38 +44,18 @@ void writeDataToFile (double data)  // by example "DataPath" = "C:\\program.txt"
 
 int main()
 {
-    printf("hello world\n");
-    printf("##############################################################################################################\n");
-    printf("\t\t\t Titatronic ready !!!)");
-    printf("##############################################################################################################\n");
+    printf("####################################\n");
+    printf("\t\t\t Titatronic ready to test pathplanning !!! \n");
+    printf("####################################\n");
 
-
-    CAN *can;
-    can = new CAN(CAN_BR);
-    can->configure();
-
-    SPI_DE0 *spi;
-    spi = new SPI_DE0(0,500000);
 
     CtrlStruct* structure = init();
-
-    can->ctrl_motor(1);
-    can->push_TowDC(0);
-    can->push_PropDC(0, 0);
 
     //path and map initialization (see pathplanning algorithm.c to understand how it works)
     Map* mymap = initmap();
 
-    while(1)
-    {
-        updateinfo(structure, spi);//(cfr posctrl) update info from laser tower and from encoder, speed, avancement, dist from beam
+    structure->theUserStruct->state = 2;
 
-        computecmd(structure, mymap);//(cfr ia) update the wanted commands
-
-        //action : create sub function if need
-        run_speed_controller(structure, can);//(cfr speedctrl )apply the speed (low level controller)
-
-        //other : create sub function if need
-        writeDataToFile (structure->theUserStruct->Error_omega_l);
-    }
+    for(int i = 0; i < mymap->mypath->objnb; i++)
+      printf("%d ", mymap->mypath->obj[i]);
 }
