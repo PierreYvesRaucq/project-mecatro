@@ -29,6 +29,7 @@ void adaptpath(Map* mymap)//function to call if need a new path (at the beginnin
     mymap->mypath->totalPoints = 0;
     mymap->mypath->objnb = 0;
     //mypath->timeleft = 100 - timepassed  //time left actualisation
+    mymap->mypath->actual_dest_lnb = 0;
     //printf("\n\ntotal points before begining %f\n\n\n", mymap->mypath->totalPoints);
 
     pathplanning(mymap, mymap->mypath);
@@ -58,6 +59,8 @@ void pathplanning(Map* mymap, Path* mypath)//return an object Path with the best
                     newpath.obj[pnewpath->objnb] = i;//node added to the path obj list
                     newpath.objnb++;
                     newpath.nbNodeNotVisited--;
+                    if (mymap->node[i][3] > 0)//if the node contains points
+                        newpath->actual_dest_lnb = objnb;//keeps the number of nodes thats leads to more points (actual_dest_lnb is used for it becouse not used)
                     pathplanning(mymap, pnewpath);
                 }
                 else
@@ -76,7 +79,7 @@ void pathplanning(Map* mymap, Path* mypath)//return an object Path with the best
             mymap->mypath->objnb = mypath->objnb;
             mymap->mypath->totalPoints = mypath->totalPoints;
             mymap->mypath->timeleft = mypath->timeleft;
-            for(int i = 0; i < N-1; i++)
+            for(int i = 0; i < mypath->actual_dest_lnb-1; i++)//add the nodes of the list till it does not add points anymore
                 mymap->mypath->obj[i] = mypath->obj[i];
         }
     }
