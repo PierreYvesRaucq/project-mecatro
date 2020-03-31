@@ -15,7 +15,7 @@ typedef struct Path{
     double totalPoints;//number of point expected with this path
     double timeleft;//[s]
     int actual_node;//where you are (physically or in simulation calculation)
-    int dest_lnb;
+    int actual_dest_lnb;//number of the actual followed destination
     int objnb;//number of obj in the dest list
 } Path;
 
