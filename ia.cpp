@@ -22,12 +22,7 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
 
     case 2: //navigation
     {
-        double dest[2];
-        dest[0] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][0];
-        dest[1] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][1];
-        dest[2] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][2];
-        //optimisation : ne doit pas être updatet tout le temps
-        middle_controller(theCtrlStruct, dest);
+        middle_controller(theCtrlStruct, mymap);
     }
     break;
 
@@ -76,8 +71,15 @@ void initpos(CtrlStruct *theCtrlStruct, int wallnb)
     }
 }
 
-void middle_controller(CtrlStruct *structure, double objpos[3])
+void middle_controller(CtrlStruct *structure, Map *mymap)
 {
+    double dest[2];
+    dest[0] = mymap->node[mymap->mypath->obj[mymap->mypath->dest_lnb]][0];
+    dest[1] = mymap->node[mymap->mypath->obj[mymap->mypath->dest_lnb]][1];
+    dest[2] = mymap->node[mymap->mypath->obj[mymap->mypath->dest_lnb]][2];
+    //optimisation : ne doit pas être updatet tout le temps
+    //should test if dest still exist
+
     double deltax = structure->theUserStruct->posxyt[0] - objpos[0];
     double deltay = structure->theUserStruct->posxyt[1] - objpos[1];
     double dist = sqrt(pow(deltax, 2)+pow(deltay,2));
@@ -96,8 +98,9 @@ void middle_controller(CtrlStruct *structure, double objpos[3])
         {
             if (fabs(dist) < 0.05)
             {
-                structure->theUserStruct->action_state = 0;
-                structure->theUserStruct->state = 3;//passer en mode action
+                structure->theUserStruct->action_state = 0;//end of the action should be resetted
+                mymap->mypath->dest_lnb++;
+                structure->theUserStruct->state = 1;//passer en mode action
             }
             else
                 structure->theUserStruct->action_state = 0;//passer en mode déplacement (+-) rectiligne
@@ -212,6 +215,7 @@ void nodeaction(CtrlStruct *theCtrlStruct, Map *mymap)
     break;
     default : //if no action is needed
     {
+        mymap->mypath->visited[mymap->mypath->actual_node];
         mymap->mypath->objnb++;//go to next obj
         theCtrlStruct->theUserStruct->state = 2;//in navigation mode
     }
