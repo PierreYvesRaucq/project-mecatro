@@ -15,7 +15,8 @@ typedef struct Path{
     double totalPoints;//number of point expected with this path
     double timeleft;//[s]
     int actual_node;//where you are (physically or in simulation calculation)
-    int objnb;//number of obj already passed (or added to the path for calculation)
+    int dest_lnb;
+    int objnb;//number of obj in the dest list
 } Path;
 
 typedef struct Obstacles{
@@ -28,7 +29,6 @@ typedef struct Map //contient la carte + le path
 {
     double dist[N][N];//tableau des dist entre noeuds (en temps) !!! il faut que tous les noeuds puissent retourner à la base de façon rectiligne (à priori pas de problème vu la map), base = node 0
     double node[N][5];//[0]: position x, [1]: position y, [2]: needed orientation (infinity if no orientation needed), [3]: nb de points qu'il y moy de se faire à ce noeudnoeud, [4]: cout de l'action (tps)
-    int step;
     int obstaclesnb;
     Obstacles obstacles[maxnbobstacles];//better ways to do it but flemme
     Path* mypath;
