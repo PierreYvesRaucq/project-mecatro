@@ -8,6 +8,7 @@ void initpath(Map *mymap)
     mypath->totalPoints = 0;
     mypath->nbNodeNotVisited = N-1;//base node visited
     mypath->objnb = 0;
+    mypath->dest_lnb = 0;
 
     for(int i=1; i< N; i++)
     {
@@ -28,7 +29,6 @@ void adaptpath(Map* mymap)//function to call if need a new path (at the beginnin
     mymap->mypath->totalPoints = 0;
     mymap->mypath->objnb = 0;
     //mypath->timeleft = 100 - timepassed  //time left actualisation
-    mymap->step = 0;
     //printf("\n\ntotal points before begining %f\n\n\n", mymap->mypath->totalPoints);
 
     pathplanning(mymap, mymap->mypath);
@@ -51,9 +51,6 @@ void pathplanning(Map* mymap, Path* mypath)//return an object Path with the best
 
                 if ((mymap->dist[mypath->actual_node][i] + mymap->dist[0][i]+ mymap->node[i][4]) < mypath->timeleft)
                 {
-                    //printf("time cost %f \n", (mymap->dist[mypath->actual_node][i] + mymap->dist[0][i]+ mymap->node[i][4]));
-                    //printf("time left %f \n", mypath->timeleft);
-                    //printf("path taken to node %d \n", i);
                     newpath.timeleft = pnewpath->timeleft - (mymap->dist[0][i]+ mymap->node[i][4]); //timeleft update
                     newpath.totalPoints = (pnewpath->totalPoints + mymap->node[i][3]); //point number update
                     newpath.actual_node = i;//actual node for simulation
@@ -61,14 +58,10 @@ void pathplanning(Map* mymap, Path* mypath)//return an object Path with the best
                     newpath.obj[pnewpath->objnb] = i;//node added to the path obj list
                     newpath.objnb++;
                     newpath.nbNodeNotVisited--;
-
-                    //printf("total points end %f\n", pnewpath->totalPoints);
-
                     pathplanning(mymap, pnewpath);
                 }
                 else
                 {
-                    //printf("path to node %d not taken but set as visited \n", i);
                     newpath.visited[i] = 1;//set analysing node as visited
                     newpath.nbNodeNotVisited--;
                     pathplanning(mymap, pnewpath);
