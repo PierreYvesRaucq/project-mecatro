@@ -22,11 +22,6 @@ void initpath(Map *mymap)
     printf("-----------best path found : -------------\n");
 }
 
-Map mymap;//map to be initialized with nodes
-//mymap->dist = ...;
-//mymap->node = ...;
-//difficulté : pour les manche à air je ne sais pas trop comment faire : mettre un seul noeud mais difficile ou mettre 2 noeuds mais on fait l'action entre les deux
-
 void adaptpath(Map* mymap)//function to call if need a new path (at the beginning or when a problem occurs)
 {
     //reset of values that will be updated (needed for good working of pathplanning function)
@@ -42,15 +37,13 @@ void adaptpath(Map* mymap)//function to call if need a new path (at the beginnin
 void pathplanning(Map* mymap, Path* mypath)//return an object Path with the best path and total expected points in it (most of the rest variable are unusable/false)
 {
     //printf("begin pathplanning with nb of node not visited = %d\n", mypath->nbNodeNotVisited);
-    if (mypath->nbNodeNotVisited >= 1)
+    if (mypath->nbNodeNotVisited >= 1 && mypath->objnb < 2)
     {
         Path savepath = *mypath;//créer nouveau path avec même intérieur que mypath
         Path* psavepath = &savepath;//adresse de newpath
 
         for(int i=1; i< N; i++)//test all nodes (could be smarter !!!)
         {
-            //printf("from node %d test to go to node %d\n", mypath->actual_node, i);
-
             if (mypath->visited[i] == 0)//si le noeud n'a pas encore été visité et est atteignable à temps => si tps d'aller au noeud + tps d'action au noeud + temps de retour à la base est < temps restant
             {
                 Path newpath = *psavepath;//créer nouveau path avec même intérieur que mypath
@@ -85,18 +78,6 @@ void pathplanning(Map* mymap, Path* mypath)//return an object Path with the best
     }
     else
     {
-        //printf("end of line obj list : \n");
-
-        //for(int i = 0; i < N-1; i++)
-            //printf("%d ", mypath->obj[i]);
-        //printf("\n");
-
-        //printf("timeleft : %f\n", mypath->timeleft);
-        //printf("total points : %f\n", mypath->totalPoints);
-
-        //printf("path number : %d\n", mymap->step);
-        mymap->step++;
-
         if (mymap->mypath->totalPoints < mypath->totalPoints || (mymap->mypath->totalPoints == mypath->totalPoints && mymap->mypath->timeleft < mypath->timeleft)) //to be changed
         {
             mymap->mypath->objnb = mypath->objnb;
@@ -104,10 +85,7 @@ void pathplanning(Map* mymap, Path* mypath)//return an object Path with the best
             mymap->mypath->timeleft = mypath->timeleft;
             for(int i = 0; i < N-1; i++)
                 mymap->mypath->obj[i] = mypath->obj[i];
-            //printf("path updated !!!!!\n\n");
         }
-        //else
-            //printf("no need to update\n\n");
     }
 }
 
