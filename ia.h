@@ -22,7 +22,7 @@ void calib(CtrlStruct *theCtrlStruct);
 void initpos(CtrlStruct *theCtrlStruct, int wallnb);//put position x or y to 0
 
 //middle level controller
-void middle_controller(CtrlStruct *structure, double objpos[3]);
+void middle_controller(CtrlStruct *structure, Map *mymap);
 void rot(CtrlStruct *structure, double diffangle);
 
 //action
